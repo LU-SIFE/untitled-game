@@ -2,9 +2,13 @@ var myGamePiece;
 
 function startGame() {
     myGamePieceColor = "red";
-    myGamePiece = new component(32, 32, myGamePieceColor, -1, -1);
+    myGamePiece = new component(32, 32, myGamePieceColor, (getWidth() / 2) -16, (getHeight() / 2) - 16, true);
+    myObstacle  = new component(332, getHeight(), "green", 0, 0);
+    myObstacle2  = new component(128, 256, "purple", 364, 32);
+    myObstacle3  = new component(128, 256, "purple", 364, 320);
     myGameArea.start();
 }
+
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
@@ -20,44 +24,81 @@ var myGameArea = {
     }
 }
 
-function component(width, height, color, x, y) {
+function component(width, height, color, x, y, player) {
     this.width = width;
     this.height = height;
     this.x = x;
     this.y = y;    
     this.update = function(){
         ctx = myGameArea.context;
-        ctx.fillStyle = myGamePieceColor;
+        if (player) {
+            ctx.fillStyle = myGamePieceColor;
+        } else {
+            ctx.fillStyle = color;
+        }
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 }
 
+function isCollide(a, b) {
+    return !(
+        ((a.y + a.height) < (b.y + 1)) ||
+        (a.y > (b.y + b.height - 1)) ||
+        ((a.x + a.width - 1) < b.x) ||
+        (a.x > (b.x + b.width - 1))
+    );
+}
+
+function collision() {
+    return (isCollide(myGamePiece, myObstacle) ||
+            isCollide(myGamePiece, myObstacle2) ||
+            isCollide(myGamePiece, myObstacle3)
+
+            );
+}
+
 function updateGameArea() {
+
     myGameArea.clear();
 
     myGamePieceColor = "purple";
 
 for (i = 0; i < 32; i++) {
-     if (moving_left) {
-      myGamePiece.x -= 1;
+    if (moving_left) {
+        myGamePiece.x--;
+
+        if (collision()) {
+            myGamePiece.x++;
+        }
     }
 
     if (moving_right) {
-      myGamePiece.x += 1;
+      myGamePiece.x++;
+
+        if (collision()) {
+            myGamePiece.x--;
+        }
     }
 
     if (moving_up) {
-      myGamePiece.y -= 1;
+      myGamePiece.y--;
+
+
+        if (collision()) {
+            myGamePiece.y++;
+        }
     }
 
     if (moving_down) {
-      myGamePiece.y += 1;
+      myGamePiece.y++;
+
+
+        if (collision()) {
+            myGamePiece.y--;
+        }
     }
 
     myGamePiece.update();
-
-
-
 
     if (myGamePiece.x < 0) {
         myGamePiece.x = 0;
@@ -75,10 +116,20 @@ for (i = 0; i < 32; i++) {
 
 }
 
+if (isCollide(myGamePiece, myObstacle)) {
+        console.log("true");
+    }
+
     myGamePieceColor = "red";
 
+        myObstacle.update();
+        myObstacle2.update();
+        myObstacle3.update();
     myGamePiece.update();
-    requestAnimationFrame(updateGameArea);
+    setTimeout(() => {
+        requestAnimationFrame(updateGameArea);
+}, "0")
+    
 }
 
 
