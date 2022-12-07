@@ -1,22 +1,27 @@
 var myGamePiece;
+var speed = 32;
 
 function startGame() {
+    canvasWidth = getWidth() - (getWidth() % 32);
+    canvasHeight = getHeight() - (getHeight() % 32);
     myGamePieceColor = "red";
-    myGamePiece = new component(32, 32, myGamePieceColor, (getWidth() / 2) -16, (getHeight() / 2) - 16, true);
-    myObstacle  = new component(332, getHeight(), "green", 0, 0);
-    myObstacle2  = new component(128, 256, "purple", 364, 32);
-    myObstacle3  = new component(128, 256, "purple", 364, 320);
+    myGamePiece = new component(32, 32, myGamePieceColor, (canvasWidth / 2) - 16, (canvasHeight / 2) - 16, true);
+    myObstacle  = new component(32 * 2, 32 * 10, "green", 16, 16);
+    myObstacle2  = new component(32 * 25, 32 * 5, "purple", 32 * 3 + 16, 16);
+    myObstacle3  = new component(32 * 17, 32 * 5, "purple", 32 * 3 + 16, 32 * 6 + 16);
+    myObstacle4  = new component(32 * 5, 32 * 5, "purple", 32 * 21 + 16, 32 * 6 + 16);
     myGameArea.start();
+    console.log(canvasWidth + " " + canvasHeight);
 }
 
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = getWidth();
-        this.canvas.height = getHeight();
+        this.canvas.width = getWidth() - (getWidth() % 32);
+        this.canvas.height = getHeight() - (getHeight() % 32);
         this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        document.getElementById("canvas-container").appendChild(this.canvas);
         updateGameArea();
     },
     clear : function() {
@@ -51,85 +56,66 @@ function isCollide(a, b) {
 
 function collision() {
     return (isCollide(myGamePiece, myObstacle) ||
-            isCollide(myGamePiece, myObstacle2) ||
-            isCollide(myGamePiece, myObstacle3)
-
-            );
+        isCollide(myGamePiece, myObstacle2) ||
+        isCollide(myGamePiece, myObstacle3) ||
+        isCollide(myGamePiece, myObstacle4)
+        );
 }
 
 function updateGameArea() {
 
     myGameArea.clear();
 
-    myGamePieceColor = "purple";
+    for (i = 0; i < speed; i++) {
 
-for (i = 0; i < 32; i++) {
-    if (moving_left) {
-        myGamePiece.x--;
-
-        if (collision()) {
-            myGamePiece.x++;
-        }
-    }
-
-    if (moving_right) {
-      myGamePiece.x++;
-
-        if (collision()) {
+        if (moving_left) {
             myGamePiece.x--;
+
+            if (collision()) {
+                myGamePiece.x++;
+            } else {
+                myGameArea.context.translate(1, 0);
+            }
         }
-    }
 
-    if (moving_up) {
-      myGamePiece.y--;
+        if (moving_right) {
+            myGamePiece.x++;
 
-
-        if (collision()) {
-            myGamePiece.y++;
+            if (collision()) {
+                myGamePiece.x--;
+            } else {
+                myGameArea.context.translate(-1, 0);
+            }
         }
-    }
 
-    if (moving_down) {
-      myGamePiece.y++;
-
-
-        if (collision()) {
+        if (moving_up) {
             myGamePiece.y--;
+
+            if (collision()) {
+                myGamePiece.y++;
+            } else {
+                myGameArea.context.translate(0, 1);
+            }
+        }
+
+        if (moving_down) {
+            myGamePiece.y++;
+
+            if (collision()) {
+                myGamePiece.y--;
+            } else {
+                myGameArea.context.translate(0, -1);
+            }
         }
     }
 
+    myObstacle.update();
+    myObstacle2.update();
+    myObstacle3.update();
+    myObstacle4.update();
     myGamePiece.update();
 
-    if (myGamePiece.x < 0) {
-        myGamePiece.x = 0;
-    }
-    if (myGamePiece.x > getWidth() - 32) {
-        myGamePiece.x = getWidth() - 32;
-    }
-
-    if (myGamePiece.y < 0) {
-        myGamePiece.y = 0;
-    }
-    if (myGamePiece.y > getHeight() - 32) {
-        myGamePiece.y = getHeight() - 32;
-    }
-
-}
-
-if (isCollide(myGamePiece, myObstacle)) {
-        console.log("true");
-    }
-
-    myGamePieceColor = "red";
-
-        myObstacle.update();
-        myObstacle2.update();
-        myObstacle3.update();
-    myGamePiece.update();
-    setTimeout(() => {
-        requestAnimationFrame(updateGameArea);
-}, "0")
-    
+    setTimeout(() => { requestAnimationFrame(updateGameArea); }, 0);
 }
 
 
