@@ -1,5 +1,5 @@
 var myGamePiece;
-var speed = 16;
+var speed = 8;
 var running = false;
 var stamina = 50;
 var tired = false;
@@ -91,7 +91,7 @@ function updateGameArea() {
         if (running && tired == false && currently_moving) {
             if (!(stamina <= 0)) {
                 stamina -= 0.05;
-                speed = 24;
+                speed = 20;
             } else {
                 document.getElementById("stamina").style.backgroundColor = "red";
                 tired = true;
@@ -99,8 +99,8 @@ function updateGameArea() {
             document.getElementById("stamina").style.width = stamina + "%";
         } else {
             if (!(stamina >= 50)) {
-                speed = 16;
-                stamina += 0.02;
+                speed = 8;
+                stamina += 0.07;
             } else {
                 document.getElementById("stamina").style.backgroundColor = "white";
                 tired = false;
