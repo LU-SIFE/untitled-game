@@ -1,12 +1,13 @@
 var myGamePiece;
-var speed = 32;
+var speed = 16;
 
 function startGame() {
     canvasWidth = getWidth() - (getWidth() % 32);
     canvasHeight = getHeight() - (getHeight() % 32);
     myGamePieceColor = "red";
     myGamePiece = new component(32, 32, myGamePieceColor, (canvasWidth / 2) - 16, (canvasHeight / 2) - 16, true);
-    myObstacle  = new component(32 * 2, 32 * 10, "green", 16, 16);
+    myObstacle  = new component(32 * 2, 32 * 10, "purple", 16, 16);
+    myObstacle5  = new component(32, 32, "purple", 32 * 2 + 16, 16);
     myObstacle2  = new component(32 * 25, 32 * 5, "purple", 32 * 3 + 16, 16);
     myObstacle3  = new component(32 * 17, 32 * 5, "purple", 32 * 3 + 16, 32 * 6 + 16);
     myObstacle4  = new component(32 * 5, 32 * 5, "purple", 32 * 21 + 16, 32 * 6 + 16);
@@ -58,8 +59,17 @@ function collision() {
     return (isCollide(myGamePiece, myObstacle) ||
         isCollide(myGamePiece, myObstacle2) ||
         isCollide(myGamePiece, myObstacle3) ||
-        isCollide(myGamePiece, myObstacle4)
+        isCollide(myGamePiece, myObstacle4) ||
+        isCollide(myGamePiece, myObstacle5)
         );
+}
+
+function update_area() {
+    myObstacle.update();
+    myObstacle2.update();
+    myObstacle3.update();
+    myObstacle4.update();
+    myObstacle5.update();
 }
 
 function updateGameArea() {
@@ -109,10 +119,7 @@ function updateGameArea() {
         }
     }
 
-    myObstacle.update();
-    myObstacle2.update();
-    myObstacle3.update();
-    myObstacle4.update();
+    update_area();
     myGamePiece.update();
 
     setTimeout(() => { requestAnimationFrame(updateGameArea); }, 0);
@@ -140,6 +147,8 @@ document.addEventListener("keydown", function(e) {
         moving_up = true;
     } else if (e.keyCode === 83) { // w
         moving_down = true;
+    } else if (e.keyCode === 16) { // shift
+        speed = 24;
     }
 });
 
@@ -154,6 +163,8 @@ document.addEventListener("keyup", function(e) {
         moving_up = false;
     } else if (e.keyCode === 83) { // a
         moving_down = false;
+    } else if (e.keyCode === 16) { // shift
+        speed = 16;
     }
 });
 
