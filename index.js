@@ -4,6 +4,8 @@ var running = false;
 var stamina = 50;
 var tired = false;
 var currently_moving = false;
+let img = new Image();
+img.src = 'img/upham.png';
 
 function startGame() {
     canvasWidth = getWidth() - (getWidth() % 32);
@@ -42,11 +44,11 @@ function component(width, height, color, x, y, player) {
     this.update = function(){
         ctx = myGameArea.context;
         if (player) {
-            ctx.fillStyle = myGamePieceColor;
+            ctx.drawImage(img, this.x, this.y, this.width, this.height);
         } else {
             ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
         }
-        ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 }
 
