@@ -86,6 +86,7 @@ function updateGameArea() {
                 stamina -= 0.05;
                 speed = 24;
             } else {
+                document.getElementById("stamina").style.backgroundColor = "red";
                 speed = 16;
                 tired = true;
             }
@@ -94,6 +95,7 @@ function updateGameArea() {
             if (!(stamina >= 50)) {
                 stamina += 0.02;
             } else {
+                document.getElementById("stamina").style.backgroundColor = "white";
                 tired = false;
             }
             document.getElementById("stamina").style.width = stamina + "%";
