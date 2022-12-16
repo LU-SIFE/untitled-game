@@ -9,25 +9,24 @@ let img = new Image();
 img.src = 'img/upham.png';
 
 function startGame() {
-    canvasWidth = getWidth() - (getWidth() % 32);
-    canvasHeight = getHeight() - (getHeight() % 32);
     myGamePieceColor = "red";
-    myGamePiece = new component(32, 32, myGamePieceColor, (canvasWidth / 2) - 16, (canvasHeight / 2) - 16, true);
-    myObstacle  = new component(32 * 2, 32 * 10, "purple", 16, 16);
-    myObstacle5  = new component(32, 32, "purple", 32 * 2 + 16, 16);
-    myObstacle2  = new component(32 * 25, 32 * 5, "purple", 32 * 3 + 16, 16);
-    myObstacle3  = new component(32 * 17, 32 * 5, "purple", 32 * 3 + 16, 32 * 6 + 16);
-    myObstacle4  = new component(32 * 5, 32 * 5, "purple", 32 * 21 + 16, 32 * 6 + 16);
+    myGamePiece = new component(32, 32, myGamePieceColor, 64, 32, true);
+    myObstacle  = new component(32 * 2, 32 * 10, "purple", 0, 0);
+    myObstacle5  = new component(32, 32, "purple", 32 * 2, 0);
+    myObstacle2  = new component(32 * 25, 32 * 5, "purple", 32 * 3, 0);
+    myObstacle3  = new component(32 * 17, 32 * 5, "purple", 32 * 3 , 32 * 6);
+    myObstacle4  = new component(32 * 5, 32 * 5, "purple", 32 * 21, 32 * 6);
     myGameArea.start();
-    console.log(canvasWidth + " " + canvasHeight);
+    myGameArea.clear();
+    myGameArea.context.translate((getWidth() / 2) - 80, (getHeight() / 2) - 48);
 }
 
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = getWidth() - (getWidth() % 32);
-        this.canvas.height = getHeight() - (getHeight() % 32);
+        this.canvas.width = getWidth();
+        this.canvas.height = getHeight();
         this.context = this.canvas.getContext("2d");
         document.getElementById("canvas-container").appendChild(this.canvas);
         updateGameArea();
