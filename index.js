@@ -4,6 +4,7 @@ var running = false;
 var stamina = 50;
 var tired = false;
 var currently_moving = false;
+var ammo = 8;
 let img = new Image();
 img.src = 'img/upham.png';
 
@@ -49,6 +50,39 @@ function component(width, height, color, x, y, player) {
             ctx.fillStyle = color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
+    }
+}
+
+function shoot(keypress) {
+    if (keypress && !(ammo <= 0)) {
+        document.getElementById("ammo").innerHTML = "";
+        ammo--;
+        for (i = 0; i < ammo; i++) {
+            document.getElementById("ammo").innerHTML += "/";
+        }
+        if (ammo === 0) {
+            document.getElementById("ammo").style.width = "0%";
+        }
+        console.log(ammo);
+        return;
+    }
+}
+
+function reload() {
+    if (ammo === 0) {
+        console.log("reloading...");
+        document.getElementById("reload").style.animation="reload 0.75s";
+        document.getElementById("reload").style.width = "50%";
+        setTimeout(function() {document.getElementById("reload").style.animation="flash 0.25s";}, 750);
+        setTimeout(function() {
+            document.getElementById("reload").style.width = "0%";
+            document.getElementById("ammo").style.width = "50%";
+            ammo = 8;
+
+            for (i = 0; i < ammo; i++) {
+                document.getElementById("ammo").innerHTML += "/";
+            }
+        }, 1000);
     }
 }
 
@@ -177,10 +211,14 @@ document.addEventListener("keydown", function(e) {
         moving_left = true;
     } else if (e.keyCode === 87) { // w
         moving_up = true;
-    } else if (e.keyCode === 83) { // w
+    } else if (e.keyCode === 83) { // s
         moving_down = true;
     } else if (e.keyCode === 16) { // shift
         running = true;
+    } else if (e.keyCode === 32) { // space
+        shoot(true);
+    } else if (e.keyCode === 82) { // shift
+        reload();
     }
 });
 
@@ -191,12 +229,14 @@ document.addEventListener("keyup", function(e) {
         moving_right = false;
     } else if (e.keyCode === 65) { // a
         moving_left = false;
-    } else if (e.keyCode === 87) { // a
+    } else if (e.keyCode === 87) { // w
         moving_up = false;
-    } else if (e.keyCode === 83) { // a
+    } else if (e.keyCode === 83) { // s
         moving_down = false;
     } else if (e.keyCode === 16) { // shift
         running = false;
+    } else if (e.keyCode === 32) { // space
+        shoot(false);
     }
 });
 
