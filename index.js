@@ -1,5 +1,8 @@
 var myGamePiece;
 var speed = 16;
+var running = false;
+var stamina = 50;
+var tired = false;
 
 function startGame() {
     canvasWidth = getWidth() - (getWidth() % 32);
@@ -78,6 +81,24 @@ function updateGameArea() {
 
     for (i = 0; i < speed; i++) {
 
+        if (running && tired == false) {
+            if (!(stamina <= 0)) {
+                stamina -= 0.05;
+                speed = 24;
+            } else {
+                speed = 16;
+                tired = true;
+            }
+            document.getElementById("stamina").style.width = stamina + "%";
+        } else {
+            if (!(stamina >= 50)) {
+                stamina += 0.02;
+            } else {
+                tired = false;
+            }
+            document.getElementById("stamina").style.width = stamina + "%";
+        }
+
         if (moving_left) {
             myGamePiece.x--;
 
@@ -148,7 +169,7 @@ document.addEventListener("keydown", function(e) {
     } else if (e.keyCode === 83) { // w
         moving_down = true;
     } else if (e.keyCode === 16) { // shift
-        speed = 24;
+        running = true;
     }
 });
 
@@ -164,7 +185,7 @@ document.addEventListener("keyup", function(e) {
     } else if (e.keyCode === 83) { // a
         moving_down = false;
     } else if (e.keyCode === 16) { // shift
-        speed = 16;
+        running = false;
     }
 });
 
