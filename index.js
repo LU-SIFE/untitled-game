@@ -3,6 +3,7 @@ var speed = 16;
 var running = false;
 var stamina = 50;
 var tired = false;
+var currently_moving = false;
 
 function startGame() {
     canvasWidth = getWidth() - (getWidth() % 32);
@@ -81,18 +82,24 @@ function updateGameArea() {
 
     for (i = 0; i < speed; i++) {
 
-        if (running && tired == false) {
+        if (moving_up || moving_down || moving_left || moving_right) {
+            currently_moving = true;
+        } else {
+            currently_moving = false;
+        }
+
+        if (running && tired == false && currently_moving) {
             if (!(stamina <= 0)) {
                 stamina -= 0.05;
                 speed = 24;
             } else {
                 document.getElementById("stamina").style.backgroundColor = "red";
-                speed = 16;
                 tired = true;
             }
             document.getElementById("stamina").style.width = stamina + "%";
         } else {
             if (!(stamina >= 50)) {
+                speed = 16;
                 stamina += 0.02;
             } else {
                 document.getElementById("stamina").style.backgroundColor = "white";
