@@ -8,10 +8,12 @@ var ammo = 8;
 let img = new Image();
 img.src = 'img/upham.png';
 var projectiles = new Object();
+var gunDirection = 1;
 
 function startGame() {
     myGamePieceColor = "red";
     myGamePiece = new component(32, 32, myGamePieceColor, 64, 32, true);
+    myGun = new component(24, 8, "#0f0f0f", 64, 64);
     myObstacle  = new component(32 * 2, 32 * 10, "purple", 0, 0);
     myObstacle5  = new component(32, 32, "purple", 32 * 2, 0);
     myObstacle2  = new component(32 * 25, 32 * 5, "purple", 32 * 3, 0);
@@ -67,7 +69,8 @@ function shoot(keypress) {
         if (ammo === 0) {
             document.getElementById("ammo").style.width = "0%";
         }
-        projectiles.bullet = new component(16, 16, "blue", myGamePiece.x + 8, myGamePiece.y + 32);
+        projectiles["bullet" + ammo] = new component(16, 16, "blue", myGamePiece.x + 8, myGamePiece.y + 8);
+        projectiles["bullet" + ammo].direction = gunDirection;
 
         console.log(ammo);
         return;
@@ -118,9 +121,21 @@ function update_area() {
     myObstacle3.update();
     myObstacle4.update();
     myObstacle5.update();
-    if (projectiles.bullet) {
-        projectiles.bullet.y += 2;
-        projectiles.bullet.update();
+    myGun.update();
+
+    for (i = 0; i < 8; i++) {
+        if (projectiles["bullet" + i]) {
+            if (projectiles["bullet" + i].direction == 0) {
+                projectiles["bullet" + i].x -= 24;
+            } else if (projectiles["bullet" + i].direction == 1) {
+                projectiles["bullet" + i].y -= 24;
+            } else if (projectiles["bullet" + i].direction == 2) {
+                projectiles["bullet" + i].x += 24;
+            } else if (projectiles["bullet" + i].direction == 3) {
+                projectiles["bullet" + i].y += 24;
+            }
+            projectiles["bullet" + i].update();
+        }
     }
 }
 
@@ -195,6 +210,32 @@ function updateGameArea() {
                 myGameArea.context.translate(0, -1);
             }
         }
+
+        if (gunDirection === 0) {
+            myGun.width = 8;
+            myGun.height = 24;
+            myGun.x = myGamePiece.x - 14;
+            myGun.y = myGamePiece.y + 4; 
+
+        } else if (gunDirection === 1) {
+            myGun.width = 24;
+            myGun.height = 8;
+            myGun.x = myGamePiece.x + 4;
+            myGun.y = myGamePiece.y - 14; 
+
+        } else if (gunDirection === 2) {
+            myGun.width = 8;
+            myGun.height = 24;
+            myGun.x = myGamePiece.x + 38;
+            myGun.y = myGamePiece.y + 4; 
+
+        } else if (gunDirection === 3) {
+            myGun.width = 24;
+            myGun.height = 8;
+            myGun.x = myGamePiece.x + 4;
+            myGun.y = myGamePiece.y + 38; 
+
+        }
     }
 
     update_area();
@@ -229,8 +270,16 @@ document.addEventListener("keydown", function(e) {
         running = true;
     } else if (e.keyCode === 32) { // space
         shoot(true);
-    } else if (e.keyCode === 82) { // shift
+    } else if (e.keyCode === 82) { // r
         reload();
+    } else if (e.keyCode === 37) { // left
+        gunDirection = 0;
+    } else if (e.keyCode === 38) { // up
+        gunDirection = 1;
+    } else if (e.keyCode === 39) { // right
+        gunDirection = 2;
+    } else if (e.keyCode === 40) { // down
+        gunDirection = 3;
     }
 });
 
@@ -247,8 +296,6 @@ document.addEventListener("keyup", function(e) {
         moving_down = false;
     } else if (e.keyCode === 16) { // shift
         running = false;
-    } else if (e.keyCode === 32) { // space
-        shoot(false);
     }
 });
 
