@@ -9,6 +9,7 @@ let img = new Image();
 img.src = 'img/upham.png';
 var projectiles = new Object();
 var gunDirection = 1;
+var reloading = false;
 
 function startGame() {
     myGamePieceColor = "red";
@@ -78,6 +79,7 @@ function shoot(keypress) {
 }
 
 function reload() {
+    reloading = true;
     ammo = 0;
     document.getElementById("ammo").style.width = "0%";
     document.getElementById("ammo").innerHTML = "";
@@ -93,6 +95,7 @@ function reload() {
         for (i = 0; i < ammo; i++) {
             document.getElementById("ammo").innerHTML += "/";
         }
+        reloading = false;
     }, 1000);
 }
 
@@ -271,7 +274,9 @@ document.addEventListener("keydown", function(e) {
     } else if (e.keyCode === 32) { // space
         shoot(true);
     } else if (e.keyCode === 82) { // r
-        reload();
+        if (!reloading) {
+            reload();
+        }
     } else if (e.keyCode === 37) { // left
         gunDirection = 0;
     } else if (e.keyCode === 38) { // up
