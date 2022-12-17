@@ -7,6 +7,7 @@ var currently_moving = false;
 var ammo = 8;
 let img = new Image();
 img.src = 'img/upham.png';
+var projectiles = new Object();
 
 function startGame() {
     myGamePieceColor = "red";
@@ -32,7 +33,11 @@ var myGameArea = {
         updateGameArea();
     },
     clear : function() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.restore();
+        this.context.clearRect(
+            (myGamePiece.x + 16) - (myGameArea.canvas.width / 2),
+            (myGamePiece.y + 16) - (myGameArea.canvas.height / 2),
+            myGameArea.canvas.width, myGameArea.canvas.height);
     }
 }
 
@@ -62,6 +67,8 @@ function shoot(keypress) {
         if (ammo === 0) {
             document.getElementById("ammo").style.width = "0%";
         }
+        projectiles.bullet = new component(16, 16, "blue", myGamePiece.x + 8, myGamePiece.y + 32);
+
         console.log(ammo);
         return;
     }
@@ -105,11 +112,16 @@ function collision() {
 }
 
 function update_area() {
+    myGamePiece.update();
     myObstacle.update();
     myObstacle2.update();
     myObstacle3.update();
     myObstacle4.update();
     myObstacle5.update();
+    if (projectiles.bullet) {
+        projectiles.bullet.y += 2;
+        projectiles.bullet.update();
+    }
 }
 
 function updateGameArea() {
@@ -186,7 +198,7 @@ function updateGameArea() {
     }
 
     update_area();
-    myGamePiece.update();
+
 
     setTimeout(() => { requestAnimationFrame(updateGameArea); }, 0);
 }
