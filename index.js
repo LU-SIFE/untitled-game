@@ -17,8 +17,10 @@ function startGame() {
     myObstacle3  = new component(32 * 17, 32 * 5, "purple", 32 * 3 , 32 * 6);
     myObstacle4  = new component(32 * 5, 32 * 5, "purple", 32 * 21, 32 * 6);
     myGameArea.start();
+    setTimeout(function() {
     myGameArea.clear();
-    myGameArea.context.translate((getWidth() / 2) - 80, (getHeight() / 2) - 48);
+        myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 49);
+    }, 20);
 }
 
 
@@ -40,7 +42,7 @@ function component(width, height, color, x, y, player) {
     this.width = width;
     this.height = height;
     this.x = x;
-    this.y = y;    
+    this.y = y + 1;    
     this.update = function(){
         ctx = myGameArea.context;
         if (player) {
