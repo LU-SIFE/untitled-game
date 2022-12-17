@@ -10,16 +10,24 @@ img.src = 'img/upham.png';
 var projectiles = new Object();
 var gunDirection = 1;
 var reloading = false;
+var myGamePieceColor = "red";
+var gunColor = "#0f0f0f";
+var r = 0;
+var g = 255;
+var b = 0;
+var color_cycle = "rgb(" + r + ", " + g + ", " + b + ")";
 
 function startGame() {
-    myGamePieceColor = "red";
     myGamePiece = new component(32, 32, myGamePieceColor, 64, 32, true);
-    myGun = new component(24, 8, "#0f0f0f", 64, 64);
-    myObstacle  = new component(32 * 2, 32 * 10, "purple", 0, 0);
-    myObstacle5  = new component(32, 32, "purple", 32 * 2, 0);
+    myGun = new component(24, 8, gunColor, 64, 64, "gun");
+    myObstacle  = new component(32 * 2, 32 * 12, "purple", 0, 0);
     myObstacle2  = new component(32 * 25, 32 * 5, "purple", 32 * 3, 0);
-    myObstacle3  = new component(32 * 17, 32 * 5, "purple", 32 * 3 , 32 * 6);
-    myObstacle4  = new component(32 * 5, 32 * 5, "purple", 32 * 21, 32 * 6);
+    myObstacle3  = new component(32 * 2, 32 * 2, "purple", 32 * 3 , 32 * 6);
+    myObstacle4  = new component(32 * 14, 32 * 3, "purple", 32 * 6 , 32 * 6);
+    myObstacle5  = new component(32 * 17, 32 * 2, "purple", 32 * 3 , 32 * 9);
+    myObstacle6  = new component(32 * 5, 32 * 5, "purple", 32 * 21, 32 * 6);
+    myObstacle7  = new component(32, 32, "purple", 32 * 2, 0);
+    myObstacle8  = new component(32 * 28, 32 * 3, "purple", 0, 32 * 12);
     myGameArea.start();
     myGameArea.clear();
     myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 49);
@@ -51,7 +59,10 @@ function component(width, height, color, x, y, player) {
     this.y = y + 1;    
     this.update = function(){
         ctx = myGameArea.context;
-        if (player) {
+        if (player === "gun") {
+            ctx.fillStyle = gunColor;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        } else if (player) {
             ctx.drawImage(img, this.x, this.y, this.width, this.height);
         } else {
             ctx.fillStyle = color;
@@ -62,6 +73,8 @@ function component(width, height, color, x, y, player) {
 
 function shoot(keypress) {
     if (keypress && !(ammo <= 0)) {
+        gunColor = "orangered";
+        setTimeout(function() {gunColor = "#0f0f0f";}, 50);
         document.getElementById("ammo").innerHTML = "";
         ammo--;
         for (i = 0; i < ammo; i++) {
@@ -70,7 +83,7 @@ function shoot(keypress) {
         if (ammo === 0) {
             document.getElementById("ammo").style.width = "0%";
         }
-        projectiles["bullet" + ammo] = new component(16, 16, "blue", myGamePiece.x + 8, myGamePiece.y + 8);
+        projectiles["bullet" + ammo] = new component(16, 16, "yellow", myGamePiece.x + 8, myGamePiece.y + 8);
         projectiles["bullet" + ammo].direction = gunDirection;
 
         console.log(ammo);
@@ -79,6 +92,7 @@ function shoot(keypress) {
 }
 
 function reload() {
+    gunColor = "darkred";
     reloading = true;
     ammo = 0;
     document.getElementById("ammo").style.width = "0%";
@@ -96,6 +110,7 @@ function reload() {
             document.getElementById("ammo").innerHTML += "/";
         }
         reloading = false;
+        gunColor = "#0f0f0f"
     }, 1000);
 }
 
@@ -113,7 +128,10 @@ function collision() {
         isCollide(myGamePiece, myObstacle2) ||
         isCollide(myGamePiece, myObstacle3) ||
         isCollide(myGamePiece, myObstacle4) ||
-        isCollide(myGamePiece, myObstacle5)
+        isCollide(myGamePiece, myObstacle5) ||
+        isCollide(myGamePiece, myObstacle6) ||
+        isCollide(myGamePiece, myObstacle7) ||
+        isCollide(myGamePiece, myObstacle8)
         );
 }
 
@@ -124,7 +142,9 @@ function update_area() {
     myObstacle3.update();
     myObstacle4.update();
     myObstacle5.update();
-    myGun.update();
+    myObstacle6.update();
+    myObstacle7.update();
+    myObstacle8.update();
 
     for (i = 0; i < 8; i++) {
         if (projectiles["bullet" + i]) {
@@ -140,6 +160,7 @@ function update_area() {
             projectiles["bullet" + i].update();
         }
     }
+    myGun.update();
 }
 
 function updateGameArea() {
@@ -159,20 +180,23 @@ function updateGameArea() {
                 stamina -= 0.05;
                 speed = 20;
             } else {
-                document.getElementById("stamina").style.backgroundColor = "red";
                 tired = true;
             }
             document.getElementById("stamina").style.width = stamina + "%";
         } else {
             if (!(stamina >= 50)) {
                 speed = 8;
-                stamina += 0.07;
+                stamina += 0.1;
             } else {
-                document.getElementById("stamina").style.backgroundColor = "white";
                 tired = false;
             }
             document.getElementById("stamina").style.width = stamina + "%";
         }
+
+        r = 255 - (255 / (50 / stamina));
+        g = 255 / (50 / stamina);
+        color_cycle = "rgb(" + r + ", " + g + ", " + b + ")";
+        document.getElementById("stamina").style.backgroundColor = color_cycle;
 
         if (moving_left) {
             myGamePiece.x--;
