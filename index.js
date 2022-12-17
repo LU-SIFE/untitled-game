@@ -68,21 +68,22 @@ function shoot(keypress) {
 }
 
 function reload() {
-    if (ammo === 0) {
-        console.log("reloading...");
-        document.getElementById("reload").style.animation="reload 0.75s";
-        document.getElementById("reload").style.width = "50%";
-        setTimeout(function() {document.getElementById("reload").style.animation="flash 0.25s";}, 750);
-        setTimeout(function() {
-            document.getElementById("reload").style.width = "0%";
-            document.getElementById("ammo").style.width = "50%";
-            ammo = 8;
+    ammo = 0;
+    document.getElementById("ammo").style.width = "0%";
+    document.getElementById("ammo").innerHTML = "";
+    console.log("reloading...");
+    document.getElementById("reload").style.animation="reload 0.75s";
+    document.getElementById("reload").style.width = "50%";
+    setTimeout(function() {document.getElementById("reload").style.animation="flash 0.25s";}, 750);
+    setTimeout(function() {
+        document.getElementById("reload").style.width = "0%";
+        document.getElementById("ammo").style.width = "50%";
+        ammo = 8;
 
-            for (i = 0; i < ammo; i++) {
-                document.getElementById("ammo").innerHTML += "/";
-            }
-        }, 1000);
-    }
+        for (i = 0; i < ammo; i++) {
+            document.getElementById("ammo").innerHTML += "/";
+        }
+    }, 1000);
 }
 
 function isCollide(a, b) {
