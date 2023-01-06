@@ -8,6 +8,7 @@ var ammo = 8;
 let img = new Image();
 img.src = 'img/upham.png';
 var projectiles = new Object();
+var level = new Object();
 var gunDirection = 1;
 var reloading = false;
 var myGamePieceColor = "red";
@@ -20,14 +21,14 @@ var color_cycle = "rgb(" + r + ", " + g + ", " + b + ")";
 function startGame() {
     myGamePiece = new component(32, 32, myGamePieceColor, 64, 32, true);
     myGun = new component(24, 8, gunColor, 64, 64, "gun");
-    myObstacle  = new component(32 * 2, 32 * 12, "purple", 0, 0);
-    myObstacle2  = new component(32 * 25, 32 * 5, "purple", 32 * 3, 0);
-    myObstacle3  = new component(32 * 2, 32 * 2, "purple", 32 * 3 , 32 * 6);
-    myObstacle4  = new component(32 * 14, 32 * 3, "purple", 32 * 6 , 32 * 6);
-    myObstacle5  = new component(32 * 17, 32 * 2, "purple", 32 * 3 , 32 * 9);
-    myObstacle6  = new component(32 * 5, 32 * 5, "purple", 32 * 21, 32 * 6);
-    myObstacle7  = new component(32, 32, "purple", 32 * 2, 0);
-    myObstacle8  = new component(32 * 28, 32 * 3, "purple", 0, 32 * 12);
+    level.b1  = new component(32 * 2, 32 * 12, "purple", 0, 0);
+    level.b2  = new component(32 * 25, 32 * 5, "purple", 32 * 3, 0);
+    level.b3  = new component(32 * 2, 32 * 2, "purple", 32 * 3 , 32 * 6);
+    level.b4  = new component(32 * 14, 32 * 3, "purple", 32 * 6 , 32 * 6);
+    level.b5  = new component(32 * 17, 32 * 2, "purple", 32 * 3 , 32 * 9);
+    level.b6  = new component(32 * 5, 32 * 5, "purple", 32 * 21, 32 * 6);
+    level.b7  = new component(32, 32, "purple", 32 * 2, 0);
+    level.b8  = new component(32 * 28, 32 * 3, "purple", 0, 32 * 12);
     myGameArea.start();
     myGameArea.clear();
     myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 49);
@@ -124,27 +125,27 @@ function isCollide(a, b) {
 }
 
 function collision() {
-    return (isCollide(myGamePiece, myObstacle) ||
-        isCollide(myGamePiece, myObstacle2) ||
-        isCollide(myGamePiece, myObstacle3) ||
-        isCollide(myGamePiece, myObstacle4) ||
-        isCollide(myGamePiece, myObstacle5) ||
-        isCollide(myGamePiece, myObstacle6) ||
-        isCollide(myGamePiece, myObstacle7) ||
-        isCollide(myGamePiece, myObstacle8)
+    return (isCollide(myGamePiece, level.b1) ||
+        isCollide(myGamePiece, level.b2) ||
+        isCollide(myGamePiece, level.b3) ||
+        isCollide(myGamePiece, level.b4) ||
+        isCollide(myGamePiece, level.b5) ||
+        isCollide(myGamePiece, level.b6) ||
+        isCollide(myGamePiece, level.b7) ||
+        isCollide(myGamePiece, level.b8)
         );
 }
 
 function update_area() {
     myGamePiece.update();
-    myObstacle.update();
-    myObstacle2.update();
-    myObstacle3.update();
-    myObstacle4.update();
-    myObstacle5.update();
-    myObstacle6.update();
-    myObstacle7.update();
-    myObstacle8.update();
+    level.b1.update();
+    level.b2.update();
+    level.b3.update();
+    level.b4.update();
+    level.b5.update();
+    level.b6.update();
+    level.b7.update();
+    level.b8.update();
 
     for (i = 0; i < 8; i++) {
         if (projectiles["bullet" + i]) {
