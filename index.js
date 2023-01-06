@@ -46,12 +46,11 @@ var myGameArea = {
     clear : function() {
         this.context.restore();
         this.context.clearRect(
-            (myGamePiece.x + 16 + mouseX) / 2 - (myGameArea.canvas.width / 2) + 80,
-            (myGamePiece.y + 16 + mouseY) / 2 - (myGameArea.canvas.height / 2) + 49,
+            (myGamePiece.x + 16) - (myGameArea.canvas.width / 2),
+            (myGamePiece.y + 16) - (myGameArea.canvas.height / 2),
             myGameArea.canvas.width, myGameArea.canvas.height);
     }
 }
-
 
 function component(width, height, color, x, y, player) {
     this.width = width;
@@ -136,7 +135,6 @@ function collision() {
         );
 }
 
-
 function update_area() {
     myGamePiece.update();
     myObstacle.update();
@@ -164,21 +162,10 @@ function update_area() {
     }
     myGun.update();
 }
-var mouseX = myGameArea.canvas.width / 2 - 80;
-var mouseY = myGameArea.canvas.height / 2 - 49;
-document.onmousemove = (event) => {
-    mouseX = event.clientX - (myGameArea.canvas.width / 2 - 80);
-    mouseY = event.clientY - (myGameArea.canvas.height / 2 - 49);
-}
 
 function updateGameArea() {
 
-    myGameArea.context.setTransform(1, 0, 0, 1, 0, 0);
-    myGameArea.context.translate(-((myGamePiece.x + 16 + mouseX) / 2),-((myGamePiece.y + 16 + mouseY) / 2));
-    myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 49);
-
     myGameArea.clear();
-
 
     for (i = 0; i < speed; i++) {
 
