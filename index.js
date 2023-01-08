@@ -21,19 +21,18 @@ var color_cycle = "rgb(" + r + ", " + g + ", " + b + ")";
 function startGame() {
     myGamePiece = new component(32, 32, myGamePieceColor, 64, 32, true);
     myGun = new component(24, 8, gunColor, 64, 64, "gun");
-    level.b1  = new component(32 * 2, 32 * 12, "purple", 0, 0);
+    level.b1  = new component(32 * 2, 32 * 15, "purple", 0, 0);
     level.b2  = new component(32 * 25, 32 * 5, "purple", 32 * 3, 0);
     level.b3  = new component(32 * 2, 32 * 2, "purple", 32 * 3 , 32 * 6);
-    level.b4  = new component(32 * 14, 32 * 3, "purple", 32 * 6 , 32 * 6);
-    level.b5  = new component(32 * 17, 32 * 2, "purple", 32 * 3 , 32 * 9);
+    level.b4  = new component(32 * 14, 32 * 5, "purple", 32 * 6 , 32 * 6);
+    level.b5  = new component(32 * 3, 32 * 2, "purple", 32 * 3 , 32 * 9);
     level.b6  = new component(32 * 5, 32 * 5, "purple", 32 * 21, 32 * 6);
     level.b7  = new component(32, 32, "purple", 32 * 2, 0);
-    level.b8  = new component(32 * 28, 32 * 3, "purple", 0, 32 * 12);
+    level.b8  = new component(32 * 26, 32 * 3, "purple", 32 * 2, 32 * 12);
     myGameArea.start();
     myGameArea.clear();
     myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 49);
 }
-
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
