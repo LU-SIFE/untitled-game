@@ -4,6 +4,7 @@ var running = false;
 var stamina = 50;
 var tired = false;
 var currently_moving = false;
+var hasgun = false;
 var ammo = 8;
 let img = new Image();
 img.src = 'img/upham.png';
@@ -19,19 +20,18 @@ var b = 0;
 var color_cycle = "rgb(" + r + ", " + g + ", " + b + ")";
 
 function startGame() {
-    myGamePiece = new component(32, 32, myGamePieceColor, 64, 32, true);
+    document.getElementById("start").style.display = "none";
+    document.getElementById("stats").style.display = "initial";
+    myGamePiece = new component(32, 32, myGamePieceColor, 64, 64, true);
     myGun = new component(24, 8, gunColor, 64, 64, "gun");
-    level.b1  = new component(32 * 2, 32 * 15, "purple", 0, 0);
-    level.b2  = new component(32 * 25, 32 * 5, "purple", 32 * 3, 0);
-    level.b3  = new component(32 * 2, 32 * 2, "purple", 32 * 3 , 32 * 6);
-    level.b4  = new component(32 * 14, 32 * 5, "purple", 32 * 6 , 32 * 6);
-    level.b5  = new component(32 * 3, 32 * 2, "purple", 32 * 3 , 32 * 9);
-    level.b6  = new component(32 * 5, 32 * 5, "purple", 32 * 21, 32 * 6);
-    level.b7  = new component(32, 32, "purple", 32 * 2, 0);
-    level.b8  = new component(32 * 26, 32 * 3, "purple", 32 * 2, 32 * 12);
+    level.b1  = new component(32 * 2, 32 * 15, "#515151", 0, 0);
+    level.b2  = new component(32 * 11, 32 * 2, "#515151", 32 * 2, 0);
+    level.b3  = new component(32 * 13, 32 * 2, "#515151", 0, 32 * 13);
+    level.b4  = new component(32 * 2, 32 * 15, "#515151", 32 * 13, 0);
+    item1 = new component(24, 8, "#0f0f0f", 32 * 12, 32 * 12);
     myGameArea.start();
+    myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 81);
     myGameArea.clear();
-    myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 49);
 }
 
 var myGameArea = {
@@ -72,7 +72,7 @@ function component(width, height, color, x, y, player) {
 }
 
 function shoot(keypress) {
-    if (keypress && !(ammo <= 0)) {
+    if (keypress && !(ammo <= 0) && hasgun) {
         gunColor = "orangered";
         setTimeout(function() {gunColor = "#0f0f0f";}, 50);
         document.getElementById("ammo").innerHTML = "";
@@ -127,11 +127,11 @@ function collision() {
     return (isCollide(myGamePiece, level.b1) ||
         isCollide(myGamePiece, level.b2) ||
         isCollide(myGamePiece, level.b3) ||
-        isCollide(myGamePiece, level.b4) ||
-        isCollide(myGamePiece, level.b5) ||
-        isCollide(myGamePiece, level.b6) ||
-        isCollide(myGamePiece, level.b7) ||
-        isCollide(myGamePiece, level.b8)
+        isCollide(myGamePiece, level.b4)// ||
+//        isCollide(myGamePiece, level.b5) ||
+//        isCollide(myGamePiece, level.b6) ||
+//        isCollide(myGamePiece, level.b7) ||
+//        isCollide(myGamePiece, level.b8)
         );
 }
 
@@ -141,10 +141,18 @@ function update_area() {
     level.b2.update();
     level.b3.update();
     level.b4.update();
-    level.b5.update();
-    level.b6.update();
-    level.b7.update();
-    level.b8.update();
+//    level.b5.update();
+//    level.b6.update();
+//    level.b7.update();
+//    level.b8.update();
+
+if (item1) {
+    item1.update();
+    if (isCollide(myGamePiece, item1)) {
+        hasgun = true;
+        item1 = null;
+    }
+}
 
     for (i = 0; i < 8; i++) {
         if (projectiles["bullet" + i]) {
