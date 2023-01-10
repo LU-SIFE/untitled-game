@@ -284,14 +284,20 @@ function story(event) {
     case 0:
 
         document.getElementById("text_box").style.display = "initial";
+        document.getElementById("text_box2").style.display = "block";
         timer(1500, 0);
         timer(2000, 1);
         timer(1500, 2, true);
     break;
 
     case 1:
+        document.getElementById("text_box2").innerHTML = "SHOOT:<br>Space";
         timer(2000, 3);
         timer(1500, 4, true);
+    break;
+
+    case 2:
+        document.getElementById("text_box2").style.display = "none";
     break;
     }
 }

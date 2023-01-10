@@ -4,6 +4,7 @@ function collision(type, iteration) {
         if (isCollide(projectiles["bullet" + iteration], level.br1)) {
             projectiles["bullet" + iteration] = null;
             level.br1 = null;
+            story(2);
         }
     } else if (type == "bullet") {
         if (isCollide(projectiles["bullet" + iteration], level.b1) ||

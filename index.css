@@ -31,7 +31,7 @@ canvas {
   min-height: 100vh;
 }
 
-#stats, #text_box {
+#stats, #text_box, #text_box2 {
     border: 4px solid orange;
     background-color: #0f0f0f;
     color: orange;
@@ -56,6 +56,16 @@ canvas {
     overflow: hidden;
     white-space: nowrap;
     width: 15em;
+}
+
+#text_box2 {
+    text-align: center;
+    bottom: 2%;
+    right: 1.5%;
+    overflow: hidden;
+    white-space: nowrap;
+    width: fit-content;
+
 }
 
 #stats .item_container {
