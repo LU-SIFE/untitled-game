@@ -38,15 +38,15 @@ function fade1() {
         startGame();
     } else {
         begin_game = true;
-    document.getElementById("start").style.pointerEvents = "none";
-    document.getElementById("start").style.opacity = "0";
-    setTimeout(function() {
-        document.getElementById("start").innerHTML = "Are You Sure?";
-    document.getElementById("start").style.pointerEvents = "all";
-    document.getElementById("start").style.opacity = "1";
-    }, 500);
+        document.getElementById("start").style.pointerEvents = "none";
+        document.getElementById("start").style.opacity = "0";
 
-}
+        setTimeout(function() {
+            document.getElementById("start").innerHTML = "Are You Sure?";
+            document.getElementById("start").style.pointerEvents = "all";
+            document.getElementById("start").style.opacity = "1";
+        }, 500);
+    }
 }
 
 function startGame() {
@@ -122,15 +122,11 @@ function reload() {
 }
 
 function update_area() {
-    myGamePiece.update();
-    level.b1.update();
-    level.b2.update();
-    level.b3.update();
-    level.b4.update();
-//    level.b5.update();
-//    level.b6.update();
-//    level.b7.update();
-//    level.b8.update();
+
+myGamePiece.update();
+for (i = 1; i <= collision_counter; i++) {
+    level["b" + i].update();
+}
 
 if (item1) {
     item1.update();
