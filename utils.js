@@ -21,8 +21,8 @@ function getHeight() {
 }
 
 //box display thingy
-function box_remove(delay) {
-    setTimeout(function() {document.getElementById("text_box").style.display = "none";}, delay);
+function box_remove(delay2) {
+    setTimeout(function() {document.getElementById("text_box").style.display = "none";}, delay2);
 }
 
 //story text function
@@ -33,7 +33,7 @@ function timer(delay, array, reset, rdelay) {
         document.getElementById("text_box").innerHTML = text_array[array];
         setTimeout(function() {
             document.getElementById("text_box").classList.remove("expand");
-            if (reset && rdelay) {
+            if (rdelay > 0) {
                 box_remove(rdelay);
             }
         }, 500);

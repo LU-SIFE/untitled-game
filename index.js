@@ -3,10 +3,17 @@ var text_array = [
     "Where am I?",
     "Looks like someone left<br>their weapon on the floor,<br>Maybe I should pick it up,<br>just in case.",
     "Alright...<br>How do I get out of here?",
-    "Maybe I could see if<br>there are any possible<br>exits or cracks around."
+    "Maybe I could see if<br>there are any possible<br>exits or cracks around.",
+    "Nice!!",
+    "Looks like that<br>did it. Let's find<br>a way out of here.",
+    "... It's so empty.",
+    "Maybe I should stay<br>where I woke up, so I<br>don't lose my way."
 
 ];
-
+var map_array = ["Cell One<br>", "???----------<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>"];
+var map_state = false;
+var paused = false;
+var progress = 0;
 var collision_counter = 4;
 var colliding = false;
 var timing = 0;
@@ -276,7 +283,35 @@ function updateGameArea() {
 
     update_area();
 
-    requestAnimationFrame(updateGameArea);
+    pause_check();
+}
+
+function pause_check() {
+    if (paused) {
+
+    } else {
+        requestAnimationFrame(updateGameArea);
+    }
+}
+
+function display_map(state) {
+    if (state) {
+        map_state = true;
+        document.getElementById("map").style.display = "flex";
+    } else {
+        map_state = false;
+        document.getElementById("map").style.display = "none";
+    }
+}
+
+function select_map(mapdir) {
+    if (mapdir) {//up
+        map_array.unshift(map_array.pop());
+
+    } else if (!mapdir) {//down
+        map_array.push(map_array.shift());
+    }
+    document.getElementById("map_entries").innerHTML = map_array.join("");
 }
 
 function story(event) {
@@ -298,6 +333,17 @@ function story(event) {
 
     case 2:
         document.getElementById("text_box2").style.display = "none";
+        timer(1000, 5);
+        timer(13000, 6, null, 1500);
+        timer(1500, 7, null, 3000);
+        setTimeout(function(){story(3);}, 15500);
+        timer(4000, 8, true, null);
+        break;
+
+    case 3:
+        document.getElementById("text_box2").style.display = "block";
+        document.getElementById("text_box2").innerHTML = "MAP:<br>M";
+        progress = 3;
     break;
     }
 }

@@ -7,30 +7,54 @@ var moving_down = false;
 document.addEventListener("keydown", function(e) {
     e = e || window.event; // For older browsers (uses window.event if e is undefined)
 
-    if (e.keyCode === 68) { // d
-        moving_right = true;
-    } else if (e.keyCode === 65) { // a
-        moving_left = true;
-    } else if (e.keyCode === 87) { // w
-        moving_up = true;
-    } else if (e.keyCode === 83) { // s
-        moving_down = true;
-    } else if (e.keyCode === 16) { // shift
-        running = true;
-    } else if (e.keyCode === 32) { // space
-        shoot(true);
-    } else if (e.keyCode === 82) { // r
-        if (!reloading && hasgun) {
-            reload();
+    if (!paused) {
+        if (e.keyCode === 68) { // d
+            moving_right = true;
+        } else if (e.keyCode === 65) { // a
+            moving_left = true;
+        } else if (e.keyCode === 87) { // w
+            moving_up = true;
+        } else if (e.keyCode === 83) { // s
+            moving_down = true;
+        } else if (e.keyCode === 16) { // shift
+            running = true;
+        } else if (e.keyCode === 32) { // space
+            shoot(true);
+        } else if (e.keyCode === 82) { // r
+            if (!reloading && hasgun) {
+                reload();
+            }
+        } else if (e.keyCode === 37) { // left
+            gunDirection = 0;
+        } else if (e.keyCode === 38) { // up
+            gunDirection = 1;
+        } else if (e.keyCode === 39) { // right
+            gunDirection = 2;
+        } else if (e.keyCode === 40) { // down
+            gunDirection = 3;
         }
-    } else if (e.keyCode === 37) { // left
-        gunDirection = 0;
-    } else if (e.keyCode === 38) { // up
-        gunDirection = 1;
-    } else if (e.keyCode === 39) { // right
-        gunDirection = 2;
-    } else if (e.keyCode === 40) { // down
-        gunDirection = 3;
+    }
+
+    if (e.keyCode === 87) {
+        if (map_state === true) {
+            select_map(false);
+        }
+
+    } else if (e.keyCode === 83) {
+        if (map_state === true) {
+            select_map(true);
+        }
+    }
+
+    if (e.keyCode === 77 && progress === 3) {
+        if (paused) {
+            paused = false;
+            pause_check();
+            display_map(false);
+        } else {
+            paused = true;
+            display_map(true);
+        }
     }
 });
 
