@@ -1,4 +1,13 @@
+var text_array = [
+    "...",
+    "Where am I?",
+    "Looks like someone left<br>their weapon on the floor,<br> I'll use that, just in case."
+
+];
+
+
 var myGamePiece;
+var myGun;
 var speed = 8;
 var running = false;
 var stamina = 50;
@@ -14,16 +23,33 @@ var gunDirection = 1;
 var reloading = false;
 var myGamePieceColor = "red";
 var gunColor = "#0f0f0f";
+var begin_game = false;
 var r = 0;
 var g = 255;
 var b = 0;
 var color_cycle = "rgb(" + r + ", " + g + ", " + b + ")";
 
+function fade1() {
+    if (begin_game) {
+        startGame();
+    } else {
+        begin_game = true;
+    document.getElementById("start").style.pointerEvents = "none";
+    document.getElementById("start").style.opacity = "0";
+    setTimeout(function() {
+        document.getElementById("start").innerHTML = "Are You Sure?";
+    document.getElementById("start").style.pointerEvents = "all";
+    document.getElementById("start").style.opacity = "1";
+    }, 500);
+
+}
+}
+
 function startGame() {
+    document.getElementById("stats").style.animation="pop_in_stats 0.5s";
     document.getElementById("start").style.display = "none";
     document.getElementById("stats").style.display = "initial";
     myGamePiece = new component(32, 32, myGamePieceColor, 64, 64, true);
-    myGun = new component(24, 8, gunColor, 64, 64, "gun");
     level.b1  = new component(32 * 2, 32 * 15, "#515151", 0, 0);
     level.b2  = new component(32 * 11, 32 * 2, "#515151", 32 * 2, 0);
     level.b3  = new component(32 * 13, 32 * 2, "#515151", 0, 32 * 13);
@@ -32,6 +58,7 @@ function startGame() {
     myGameArea.start();
     myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 81);
     myGameArea.clear();
+    story();
 }
 
 var myGameArea = {
@@ -83,7 +110,7 @@ function shoot(keypress) {
         if (ammo === 0) {
             document.getElementById("ammo").style.width = "0%";
         }
-        projectiles["bullet" + ammo] = new component(16, 16, "yellow", myGamePiece.x + 8, myGamePiece.y + 8);
+        projectiles["bullet" + ammo] = new component(24, 24, "orange", myGamePiece.x + 4, myGamePiece.y + 4);
         projectiles["bullet" + ammo].direction = gunDirection;
 
         console.log(ammo);
@@ -151,6 +178,9 @@ if (item1) {
     if (isCollide(myGamePiece, item1)) {
         hasgun = true;
         item1 = null;
+        myGun = new component(24, 8, gunColor, (myGamePiece.x + 4), (myGamePiece.y - 14), "gun");
+        gunDirection = 1; 
+        reload();
     }
 }
 
@@ -168,7 +198,9 @@ if (item1) {
             projectiles["bullet" + i].update();
         }
     }
-    myGun.update();
+    if (myGun) {
+        myGun.update();
+    }
 }
 
 function updateGameArea() {
@@ -246,25 +278,25 @@ function updateGameArea() {
             }
         }
 
-        if (gunDirection === 0) {
+        if (gunDirection === 0 && myGun) {
             myGun.width = 8;
             myGun.height = 24;
             myGun.x = myGamePiece.x - 14;
             myGun.y = myGamePiece.y + 4; 
 
-        } else if (gunDirection === 1) {
+        } else if (gunDirection === 1 && myGun) {
             myGun.width = 24;
             myGun.height = 8;
             myGun.x = myGamePiece.x + 4;
             myGun.y = myGamePiece.y - 14; 
 
-        } else if (gunDirection === 2) {
+        } else if (gunDirection === 2 && myGun) {
             myGun.width = 8;
             myGun.height = 24;
             myGun.x = myGamePiece.x + 38;
             myGun.y = myGamePiece.y + 4; 
 
-        } else if (gunDirection === 3) {
+        } else if (gunDirection === 3 && myGun) {
             myGun.width = 24;
             myGun.height = 8;
             myGun.x = myGamePiece.x + 4;
@@ -306,7 +338,7 @@ document.addEventListener("keydown", function(e) {
     } else if (e.keyCode === 32) { // space
         shoot(true);
     } else if (e.keyCode === 82) { // r
-        if (!reloading) {
+        if (!reloading && hasgun) {
             reload();
         }
     } else if (e.keyCode === 37) { // left
@@ -365,4 +397,23 @@ function getHeight() {
     document.documentElement.offsetHeight,
     document.documentElement.clientHeight
   );
+}
+
+function timer(time, array, delay) {
+    setTimeout(function() {
+        document.getElementById("text_box").classList.add("expand");
+        document.getElementById("text_box").innerHTML = text_array[array];
+        setTimeout(function() {
+            document.getElementById("text_box").classList.remove("expand");}, time);
+    }, delay);
+}
+
+function story() {
+    document.getElementById("text_box").style.display = "initial";
+    timer(500, 0, 0);
+    timer(500, 1, 1500);
+    timer(500, 0, 3000);
+    timer(500, 0, 0);
+
+
 }

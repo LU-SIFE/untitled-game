@@ -1,11 +1,16 @@
+::root {
+    overflow: hidden;
+}
+
 body, html {
     pointer-events: none;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     margin: 0;
     padding: 0;
     text-align: center;
     background-color: #1f1f1f;
+    overflow: hidden;
 }
 
 body {
@@ -26,7 +31,7 @@ canvas {
   min-height: 100vh;
 }
 
-#stats {
+#stats, #text_box {
     border: 4px solid orange;
     background-color: #0f0f0f;
     color: orange;
@@ -34,12 +39,23 @@ canvas {
     position: absolute;
     padding: 0.75em;
     z-index: 10;
-    width: 10em;
-    bottom: 2%;
-    left: 1.5%;
     display: none;
     box-shadow: 15px 15px black;
     text-shadow: 7px 7px black;
+}
+
+#stats {
+    bottom: 2%;
+    left: 1.5%;
+    width: 10em;
+}
+
+#text_box {
+    top: 2%;
+    right: 1.5%;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 15em;
 }
 
 #stats .item_container {
@@ -91,6 +107,7 @@ button {
     font-size: 2em;
     margin: auto;
     color: orange;
+    opacity: 1;
     background-color: #0f0f0f;
     border-color: orange;
     padding: 1em;
@@ -112,4 +129,23 @@ button:hover {
 @keyframes begin {
     from {border-color: orange; color: orange; box-shadow: 15px 15px black; text-shadow: none; border-radius: 0;}
     to {border-color: white; color: white; box-shadow: none; text-shadow: none; border-radius: 0.75em;}
+}
+
+#stats {
+    overflow: hidden;
+}
+
+@keyframes pop_in_stats {
+    from {width: 0%}
+    to {width: 10em}
+}
+
+@keyframes pop_in_text {
+    from {width: 0;}
+    to {width: 15em}
+}
+
+.expand {
+    animation-duration: 0.5s;
+    animation-name: pop_in_text;
 }
