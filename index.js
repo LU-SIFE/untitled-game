@@ -1,10 +1,14 @@
 var text_array = [
     "...",
     "Where am I?",
-    "Looks like someone left<br>their weapon on the floor,<br>Maybe I should pick it up,<br>just in case."
+    "Looks like someone left<br>their weapon on the floor,<br>Maybe I should pick it up,<br>just in case.",
+    "Alright...<br>How do I get out of here?",
+    "Maybe I could see if<br>there are any possible<br>exits or cracks around."
 
 ];
 
+var collision_counter = 4;
+var colliding = false;
 var timing = 0;
 var myGamePiece;
 var myGun;
@@ -49,12 +53,7 @@ function startGame() {
     document.getElementById("stats").style.animation="pop_in_stats 0.5s";
     document.getElementById("start").style.display = "none";
     document.getElementById("stats").style.display = "initial";
-    myGamePiece = new component(32, 32, myGamePieceColor, 64, 64, true);
-    level.b1  = new component(32 * 2, 32 * 15, "#515151", 0, 0);
-    level.b2  = new component(32 * 11, 32 * 2, "#515151", 32 * 2, 0);
-    level.b3  = new component(32 * 13, 32 * 2, "#515151", 0, 32 * 13);
-    level.b4  = new component(32 * 2, 32 * 15, "#515151", 32 * 13, 0);
-    item1 = new component(24, 8, "#0f0f0f", 32 * 12, 32 * 12);
+    generate_objects();
     myGameArea.start();
     myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 81);
     myGameArea.clear();
@@ -76,25 +75,6 @@ var myGameArea = {
             (myGamePiece.x + 16) - (myGameArea.canvas.width / 2),
             (myGamePiece.y + 16) - (myGameArea.canvas.height / 2),
             myGameArea.canvas.width, myGameArea.canvas.height);
-    }
-}
-
-function component(width, height, color, x, y, player) {
-    this.width = width;
-    this.height = height;
-    this.x = x;
-    this.y = y + 1;    
-    this.update = function(){
-        ctx = myGameArea.context;
-        if (player === "gun") {
-            ctx.fillStyle = gunColor;
-            ctx.fillRect(this.x, this.y, this.width, this.height);
-        } else if (player) {
-            ctx.drawImage(img, this.x, this.y, this.width, this.height);
-        } else {
-            ctx.fillStyle = color;
-            ctx.fillRect(this.x, this.y, this.width, this.height);
-        }
     }
 }
 
@@ -141,27 +121,6 @@ function reload() {
     }, 1000);
 }
 
-function isCollide(a, b) {
-    return !(
-        ((a.y + a.height) < (b.y + 1)) ||
-        (a.y > (b.y + b.height - 1)) ||
-        ((a.x + a.width - 1) < b.x) ||
-        (a.x > (b.x + b.width - 1))
-    );
-}
-
-function collision() {
-    return (isCollide(myGamePiece, level.b1) ||
-        isCollide(myGamePiece, level.b2) ||
-        isCollide(myGamePiece, level.b3) ||
-        isCollide(myGamePiece, level.b4)// ||
-//        isCollide(myGamePiece, level.b5) ||
-//        isCollide(myGamePiece, level.b6) ||
-//        isCollide(myGamePiece, level.b7) ||
-//        isCollide(myGamePiece, level.b8)
-        );
-}
-
 function update_area() {
     myGamePiece.update();
     level.b1.update();
@@ -181,7 +140,12 @@ if (item1) {
         myGun = new component(24, 8, gunColor, (myGamePiece.x + 4), (myGamePiece.y - 14), "gun");
         gunDirection = 1; 
         reload();
+        story(1);
     }
+}
+
+if (level.br1) {
+    level.br1.update();
 }
 
     for (i = 0; i < 8; i++) {
@@ -195,7 +159,16 @@ if (item1) {
             } else if (projectiles["bullet" + i].direction == 3) {
                 projectiles["bullet" + i].y += 24;
             }
-            projectiles["bullet" + i].update();
+            if (level.br1) {
+                collision("breakable", i);
+            }
+            if (projectiles["bullet" + i]) {
+                collision("bullet", i);
+            }
+
+            if (projectiles["bullet" + i]) {
+                projectiles["bullet" + i].update();
+            }
         }
     }
     if (myGun) {
@@ -241,14 +214,14 @@ function updateGameArea() {
         if (moving_left) {
             myGamePiece.x--;
 
-            if (collision()) {
+            if (collision() && !colliding) {
                 myGamePiece.x++;
             } else {
                 myGameArea.context.translate(1, 0);
             }
         }
 
-        if (moving_right) {
+        if (moving_right && !colliding) {
             myGamePiece.x++;
 
             if (collision()) {
@@ -261,7 +234,7 @@ function updateGameArea() {
         if (moving_up) {
             myGamePiece.y--;
 
-            if (collision()) {
+            if (collision() && !colliding) {
                 myGamePiece.y++;
             } else {
                 myGameArea.context.translate(0, 1);
@@ -271,7 +244,7 @@ function updateGameArea() {
         if (moving_down) {
             myGamePiece.y++;
 
-            if (collision()) {
+            if (collision() && !colliding) {
                 myGamePiece.y--;
             } else {
                 myGameArea.context.translate(0, -1);
@@ -307,114 +280,22 @@ function updateGameArea() {
 
     update_area();
 
-
-    setTimeout(() => { requestAnimationFrame(updateGameArea); }, 0);
-}
-
-
-//
-
-var moving_right = false;
-var moving_left = false;
-var moving_up = false;
-var moving_down = false;
-
-
-// ---- Code to work with HTML keyboard events ----
-
-document.addEventListener("keydown", function(e) {
-    e = e || window.event; // For older browsers (uses window.event if e is undefined)
-
-    if (e.keyCode === 68) { // d
-        moving_right = true;
-    } else if (e.keyCode === 65) { // a
-        moving_left = true;
-    } else if (e.keyCode === 87) { // w
-        moving_up = true;
-    } else if (e.keyCode === 83) { // s
-        moving_down = true;
-    } else if (e.keyCode === 16) { // shift
-        running = true;
-    } else if (e.keyCode === 32) { // space
-        shoot(true);
-    } else if (e.keyCode === 82) { // r
-        if (!reloading && hasgun) {
-            reload();
-        }
-    } else if (e.keyCode === 37) { // left
-        gunDirection = 0;
-    } else if (e.keyCode === 38) { // up
-        gunDirection = 1;
-    } else if (e.keyCode === 39) { // right
-        gunDirection = 2;
-    } else if (e.keyCode === 40) { // down
-        gunDirection = 3;
-    }
-});
-
-document.addEventListener("keyup", function(e) {
-    e = e || window.event; // For older browsers (uses window.event if e is undefined)
-
-    if (e.keyCode === 68) { // d
-        moving_right = false;
-    } else if (e.keyCode === 65) { // a
-        moving_left = false;
-    } else if (e.keyCode === 87) { // w
-        moving_up = false;
-    } else if (e.keyCode === 83) { // s
-        moving_down = false;
-    } else if (e.keyCode === 16) { // shift
-        running = false;
-    }
-});
-
-var mouse = new Object;
-mouse.x = -1;
-mouse.y = -1;
-
-document.addEventListener('mousemove', (event) => {
-    mouse.x = event.clientX;
-    mouse.y = event.clientY;
-});
-
-//
-
-function getWidth() {
-  return Math.max(
-    document.body.scrollWidth,
-    document.documentElement.scrollWidth,
-    document.body.offsetWidth,
-    document.documentElement.offsetWidth,
-    document.documentElement.clientWidth
-  );
-}
-
-function getHeight() {
-  return Math.max(
-    document.body.scrollHeight,
-    document.documentElement.scrollHeight,
-    document.body.offsetHeight,
-    document.documentElement.offsetHeight,
-    document.documentElement.clientHeight
-  );
-}
-
-function timer(time, array) {
-    setTimeout(function() {
-        document.getElementById("text_box").classList.add("expand");
-        document.getElementById("text_box").innerHTML = text_array[array];
-        setTimeout(function() {
-            document.getElementById("text_box").classList.remove("expand");}, time);
-    }, timing);
-    timing += 1500;
+    requestAnimationFrame(updateGameArea);
 }
 
 function story(event) {
-    if (event === 0) {
-    document.getElementById("text_box").style.display = "initial";
-    timer(500, 0);
-    timer(500, 1);
-    timer(500, 0);
-    timer(500, 2);
+    switch(event) {
+    case 0:
+
+        document.getElementById("text_box").style.display = "initial";
+        timer(1500, 0);
+        timer(2000, 1);
+        timer(1500, 2, true);
+    break;
+
+    case 1:
+        timer(2000, 3);
+        timer(1500, 4, true);
+    break;
     }
 }
