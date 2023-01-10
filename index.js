@@ -1,11 +1,11 @@
 var text_array = [
     "...",
     "Where am I?",
-    "Looks like someone left<br>their weapon on the floor,<br> I'll use that, just in case."
+    "Looks like someone left<br>their weapon on the floor,<br>Maybe I should pick it up,<br>just in case."
 
 ];
 
-
+var timing = 0;
 var myGamePiece;
 var myGun;
 var speed = 8;
@@ -58,7 +58,7 @@ function startGame() {
     myGameArea.start();
     myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 81);
     myGameArea.clear();
-    story();
+    story(0);
 }
 
 var myGameArea = {
@@ -399,21 +399,22 @@ function getHeight() {
   );
 }
 
-function timer(time, array, delay) {
+function timer(time, array) {
     setTimeout(function() {
         document.getElementById("text_box").classList.add("expand");
         document.getElementById("text_box").innerHTML = text_array[array];
         setTimeout(function() {
             document.getElementById("text_box").classList.remove("expand");}, time);
-    }, delay);
+    }, timing);
+    timing += 1500;
 }
 
-function story() {
+function story(event) {
+    if (event === 0) {
     document.getElementById("text_box").style.display = "initial";
-    timer(500, 0, 0);
-    timer(500, 1, 1500);
-    timer(500, 0, 3000);
-    timer(500, 0, 0);
-
-
+    timer(500, 0);
+    timer(500, 1);
+    timer(500, 0);
+    timer(500, 2);
+    }
 }
