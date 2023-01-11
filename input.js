@@ -56,6 +56,10 @@ document.addEventListener("keydown", function(e) {
             display_map(true);
         }
     }
+
+    if (e.keyCode === 13 && paused && progress === 3) {
+        teleport();
+    }
 });
 
 document.addEventListener("keyup", function(e) {

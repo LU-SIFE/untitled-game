@@ -76,9 +76,12 @@ canvas {
     height: 40%;
 }
 
+#map_entries, #top_entry {
+    position: absolute;
+}
+
 #map_entries {
-    margin-left: 1em;
-    margin-right: 1em;
+    top: 1.25em;
 }
 
 #stats .item_container {

@@ -10,7 +10,10 @@ var text_array = [
     "Maybe I should stay<br>where I woke up, so I<br>don't lose my way."
 
 ];
-var map_array = ["Cell One<br>", "???----------<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>"];
+var map_array = ["Cell One<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>"];
+var map_array_buffer = ["<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>"];
+var top_entry = "Cell One<br>";
+var map_selection = 0;
 var map_state = false;
 var paused = false;
 var progress = 0;
@@ -65,6 +68,8 @@ function startGame() {
     myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 81);
     myGameArea.clear();
     story(0);
+    select_map(true);
+    select_map(false);
 }
 
 var myGameArea = {
@@ -306,12 +311,33 @@ function display_map(state) {
 
 function select_map(mapdir) {
     if (mapdir) {//up
+        map_selection--;
         map_array.unshift(map_array.pop());
 
     } else if (!mapdir) {//down
+        map_selection++;
         map_array.push(map_array.shift());
     }
-    document.getElementById("map_entries").innerHTML = map_array.join("");
+
+    map_array_buffer = map_array.slice();
+    map_array_buffer[0] = "<br>";
+    top_entry = map_array[0].toString();
+    top_entry = top_entry.substring(0, top_entry.length - 4);
+
+    document.getElementById("map_entries").innerHTML = map_array_buffer.join("");
+    document.getElementById("top_entry").innerHTML = "[ " + top_entry + " ]";
+}
+
+function teleport() {
+    switch(map_selection) {
+    case 0:
+        myGamePiece.x = 64;
+        myGamePiece.y = 64;
+    break;
+    }
+
+    myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 81);
+    myGameArea.context.translate(myGamePiece.x, myGamePiece.y);
 }
 
 function story(event) {
