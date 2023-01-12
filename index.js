@@ -1,47 +1,55 @@
-var text_array = [
-    "...",
-    "Where am I?",
-    "Looks like someone left<br>their weapon on the floor,<br>Maybe I should pick it up,<br>just in case.",
-    "Alright...<br>How do I get out of here?",
-    "Maybe I could see if<br>there are any possible<br>exits or cracks around.",
-    "Nice!!",
-    "Looks like that<br>did it. Let's find<br>a way out of here.",
-    "... It's so empty.",
-    "Maybe I should stay<br>where I woke up, so I<br>don't lose my way."
+//object variables (UPDATE THIS WHENEVER A NEW NORMAL WALL IS MADE!!!!)
+const collision_counter = 4;
 
-];
-var map_array = ["Cell One<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>"];
-var map_array_buffer = ["<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>"];
-var top_entry = "Cell One<br>";
-var map_selection = 0;
-var map_state = false;
-var paused = false;
-var progress = 0;
-var collision_counter = 4;
-var colliding = false;
-var timing = 0;
-var myGamePiece;
-var myGun;
-var speed = 8;
-var running = false;
-var stamina = 50;
-var tired = false;
+//player states
+var myGamePieceColor = "red";
 var currently_moving = false;
+var gunColor = "#0f0f0f";
+var gunDirection = 1;
+var colliding = false;
+var reloading = false;
+var running = false;
 var hasgun = false;
+var paused = false;
+var tired = false;
+
+//player options/stats
+var stamina = 50;
+var speed = 8;
 var ammo = 8;
-let img = new Image();
-img.src = 'img/upham.png';
+
+//story related variables
+var begin_game = false;
+var progress = 0;
+
+//variable initialization
 var projectiles = new Object();
 var level = new Object();
-var gunDirection = 1;
-var reloading = false;
-var myGamePieceColor = "red";
-var gunColor = "#0f0f0f";
-var begin_game = false;
+const img = new Image();
+img.src = 'img/upham.png';
+var myGamePiece;
+var myGun;
+
+//ui (stamina)
 var r = 0;
 var g = 255;
 var b = 0;
 var color_cycle = "rgb(" + r + ", " + g + ", " + b + ")";
+
+
+//menu states
+var map_state = false;
+var menu_state = false;
+
+// map stuff :P
+var top_entry = "Cell One<br>";
+var map_selection = 0;
+var unlocked_locations = [true];
+var map_array = ["Cell One<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>"];
+var map_array_buffer = ["<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>", "???<br>"];
+
+//misc
+var timing = 0;
 
 function fade1() {
     if (begin_game) {
@@ -57,19 +65,6 @@ function fade1() {
             document.getElementById("start").style.opacity = "1";
         }, 500);
     }
-}
-
-function startGame() {
-    document.getElementById("stats").style.animation="pop_in_stats 0.5s";
-    document.getElementById("start").style.display = "none";
-    document.getElementById("stats").style.display = "initial";
-    generate_objects();
-    myGameArea.start();
-    myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 81);
-    myGameArea.clear();
-    story(0);
-    select_map(true);
-    select_map(false);
 }
 
 var myGameArea = {
@@ -90,6 +85,22 @@ var myGameArea = {
     }
 }
 
+//start function
+function startGame() {
+    document.body.style.cursor = 'none';
+    document.getElementById("stats").style.animation="pop_in_stats 0.5s";
+    document.getElementById("start").style.display = "none";
+    document.getElementById("stats").style.display = "initial";
+    generate_objects();
+    myGameArea.start();
+    myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 81);
+    myGameArea.clear();
+    story(0);
+    select_map(true);
+    select_map(false);
+}
+
+//shooting function
 function shoot(keypress) {
     if (keypress && !(ammo <= 0) && hasgun) {
         gunColor = "orangered";
@@ -110,6 +121,7 @@ function shoot(keypress) {
     }
 }
 
+//reloading function
 function reload() {
     gunColor = "darkred";
     reloading = true;
@@ -133,6 +145,7 @@ function reload() {
     }, 1000);
 }
 
+//update function 1
 function update_area() {
 
 myGamePiece.update();
@@ -184,6 +197,7 @@ if (level.br1) {
     }
 }
 
+//main update function
 function updateGameArea() {
 
     myGameArea.clear();
@@ -229,10 +243,10 @@ function updateGameArea() {
             }
         }
 
-        if (moving_right && !colliding) {
+        if (moving_right) {
             myGamePiece.x++;
 
-            if (collision()) {
+            if (collision() && !colliding) {
                 myGamePiece.x--;
             } else {
                 myGameArea.context.translate(-1, 0);
@@ -258,88 +272,22 @@ function updateGameArea() {
                 myGameArea.context.translate(0, -1);
             }
         }
-
-        if (gunDirection === 0 && myGun) {
-            myGun.width = 8;
-            myGun.height = 24;
-            myGun.x = myGamePiece.x - 14;
-            myGun.y = myGamePiece.y + 4; 
-
-        } else if (gunDirection === 1 && myGun) {
-            myGun.width = 24;
-            myGun.height = 8;
-            myGun.x = myGamePiece.x + 4;
-            myGun.y = myGamePiece.y - 14; 
-
-        } else if (gunDirection === 2 && myGun) {
-            myGun.width = 8;
-            myGun.height = 24;
-            myGun.x = myGamePiece.x + 38;
-            myGun.y = myGamePiece.y + 4; 
-
-        } else if (gunDirection === 3 && myGun) {
-            myGun.width = 24;
-            myGun.height = 8;
-            myGun.x = myGamePiece.x + 4;
-            myGun.y = myGamePiece.y + 38; 
-
-        }
+        gunCheck();
     }
 
     update_area();
 
-    pause_check();
+    pauseCheck();
 }
 
-function pause_check() {
-    if (paused) {
-
-    } else {
+//checks if the game is paused before updating game area
+function pauseCheck() {
+    if (paused !== true) {
         requestAnimationFrame(updateGameArea);
     }
 }
 
-function display_map(state) {
-    if (state) {
-        map_state = true;
-        document.getElementById("map").style.display = "flex";
-    } else {
-        map_state = false;
-        document.getElementById("map").style.display = "none";
-    }
-}
-
-function select_map(mapdir) {
-    if (mapdir) {//up
-        map_selection--;
-        map_array.unshift(map_array.pop());
-
-    } else if (!mapdir) {//down
-        map_selection++;
-        map_array.push(map_array.shift());
-    }
-
-    map_array_buffer = map_array.slice();
-    map_array_buffer[0] = "<br>";
-    top_entry = map_array[0].toString();
-    top_entry = top_entry.substring(0, top_entry.length - 4);
-
-    document.getElementById("map_entries").innerHTML = map_array_buffer.join("");
-    document.getElementById("top_entry").innerHTML = "[ " + top_entry + " ]";
-}
-
-function teleport() {
-    switch(map_selection) {
-    case 0:
-        myGamePiece.x = 64;
-        myGamePiece.y = 64;
-    break;
-    }
-
-    myGameArea.context.translate(myGameArea.canvas.width / 2 - 80, myGameArea.canvas.height / 2 - 81);
-    myGameArea.context.translate(myGamePiece.x, myGamePiece.y);
-}
-
+//story function
 function story(event) {
     switch(event) {
     case 0:
@@ -352,7 +300,7 @@ function story(event) {
     break;
 
     case 1:
-        document.getElementById("text_box2").innerHTML = "SHOOT:<br>Space";
+        document.getElementById("text_box2").innerHTML = "SHOOT:<br>[SPACE]";
         timer(2000, 3);
         timer(1500, 4, true);
     break;
@@ -368,8 +316,14 @@ function story(event) {
 
     case 3:
         document.getElementById("text_box2").style.display = "block";
-        document.getElementById("text_box2").innerHTML = "MAP:<br>M";
+        document.getElementById("text_box2").innerHTML = "MAP:<br>[M]";
         progress = 3;
+    break;
+
+    case 4:
+        progress = 4;
+        timer(1000, 9);
+        document.getElementById("text_box2").innerHTML = "MENU:<br>[TAB]";
     break;
     }
 }

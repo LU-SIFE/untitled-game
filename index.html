@@ -8,6 +8,7 @@
 	<script src="utils.js"></script>
 	<script src="objects.js"></script>
 	<script src="collision.js"></script>
+	<script src="dialogue.js"></script>
 	<script src="index.js"></script>
 	<link rel="stylesheet" href="index.css">
 </head>
@@ -26,9 +27,12 @@
 		</div>
 	</div>
 	<div id="map"><span id="top_entry">Cell One</span>
-		<div id="map_entries">
-		</div>
+		<div id="map_entries"></div>
+		<span style="position: absolute; top:2%; right:1.5%; text-align: right;">SELECT: <br>[⇧ W]<br>[⇩ S]</span>
+		<span style="position: absolute; bottom:2%; right:1.5%;">Teleport: [ENTER]</span>
 	</div>
+
+	<div id="menu"></div>
 	<div id="text_box"></div><div id="text_box2">MOVE:<br>W<br>A S D</div>
 
 </body>

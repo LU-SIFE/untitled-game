@@ -31,7 +31,7 @@ canvas {
   min-height: 100vh;
 }
 
-#stats, #text_box, #text_box2, #map {
+#stats, #text_box, #text_box2, #map, #menu {
     border: 4px solid orange;
     background-color: #0f0f0f;
     color: orange;
@@ -68,6 +68,14 @@ canvas {
 
 }
 
+#menu {
+    position: absolute;
+    left: 10%;
+    top: 5%;
+    right: 10%;
+    bottom: 5%;
+}
+
 #map {
     text-align: left;
     top: 2%;
@@ -78,10 +86,10 @@ canvas {
 
 #map_entries, #top_entry {
     position: absolute;
+    top: 2%;
 }
 
 #map_entries {
-    top: 1.25em;
 }
 
 #stats .item_container {

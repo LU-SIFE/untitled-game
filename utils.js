@@ -78,3 +78,105 @@ function component(width, height, color, x, y, player) {
         }
     }
 }
+
+function display_menu(state) {
+    if (state == true) {
+        menu_state = true;
+        map_state = false;
+        document.getElementById("menu").style.display = "flex";
+        document.getElementById("menu").style.zIndex = "10";
+    } else {
+        menu_state = false;
+        map_state = false;
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("menu").style.zIndex = "5";
+    }
+
+}
+
+function display_map(state) {
+    if (state == true) {
+        map_state = true;
+        menu_state = false;
+        document.getElementById("map").style.display = "flex";
+        document.getElementById("map").style.zIndex = "10";
+    } else {
+        map_state = false;
+        menu_state = false;
+        document.getElementById("map").style.display = "none";
+        document.getElementById("menu").style.zIndex = "5";
+    }
+}
+
+function select_map(mapdir) {
+    if (mapdir) {//up
+        map_array.push(map_array.shift());
+        map_selection++;
+
+    } else if (!mapdir) {//down
+        map_selection--;
+        map_array.unshift(map_array.pop());
+    }
+
+    map_array_buffer = map_array.slice();
+    map_array_buffer[0] = "<br>";
+    top_entry = map_array[0].toString();
+    top_entry = top_entry.substring(0, top_entry.length - 4);
+
+    document.getElementById("map_entries").innerHTML = map_array_buffer.join("");
+    document.getElementById("top_entry").innerHTML = "[ " + top_entry + " ]";
+}
+
+function teleport() {
+
+    if (unlocked_locations[map_selection] != true) {
+        return;
+    }
+
+    switch(map_selection) {
+    case 0:
+        myGamePiece.x = 128;
+        myGamePiece.y = 128;
+    break;
+
+    case 1:
+        myGamePiece.x = 200;
+        myGamePiece.y = 200;
+    break;
+    }
+    myGameArea.context.resetTransform();
+    myGameArea.context.translate(-myGamePiece.x - 16,-myGamePiece.y - 16);
+    myGameArea.context.translate(myGameArea.canvas.width / 2, myGameArea.canvas.height / 2);
+    display_map(false);
+    display_menu(false);
+    map_state = false;
+    menu_state = false;
+    paused = false;
+    pauseCheck();
+}
+
+function gunCheck() {
+    if (gunDirection === 0 && myGun) {
+        myGun.width = 8;
+        myGun.height = 24;
+        myGun.x = myGamePiece.x - 14;
+        myGun.y = myGamePiece.y + 4; 
+
+    } else if (gunDirection === 1 && myGun) {
+        myGun.width = 24;
+        myGun.height = 8;
+        myGun.x = myGamePiece.x + 4;
+        myGun.y = myGamePiece.y - 14; 
+
+    } else if (gunDirection === 2 && myGun) {
+        myGun.width = 8;
+        myGun.height = 24;
+        myGun.x = myGamePiece.x + 38;
+        myGun.y = myGamePiece.y + 4; 
+    } else if (gunDirection === 3 && myGun) {
+        myGun.width = 24;
+        myGun.height = 8;
+        myGun.x = myGamePiece.x + 4;
+        myGun.y = myGamePiece.y + 38; 
+    }
+}

@@ -7,7 +7,7 @@ var moving_down = false;
 document.addEventListener("keydown", function(e) {
     e = e || window.event; // For older browsers (uses window.event if e is undefined)
 
-    if (!paused) {
+    if (paused === false) {
         if (e.keyCode === 68) { // d
             moving_right = true;
         } else if (e.keyCode === 65) { // a
@@ -35,30 +35,46 @@ document.addEventListener("keydown", function(e) {
         }
     }
 
-    if (e.keyCode === 87) {
-        if (map_state === true) {
-            select_map(false);
-        }
-
-    } else if (e.keyCode === 83) {
+    if (map_state == true) {
+        if (e.keyCode === 87) {
+            if (map_state === true) {
+             select_map(false);
+         }
+     } else if (e.keyCode === 83) {
         if (map_state === true) {
             select_map(true);
         }
     }
 
-    if (e.keyCode === 77 && progress === 3) {
-        if (paused) {
+    }
+
+    if (e.keyCode === 73) {//i
+        if (menu_state == true) {
+            display_menu(false);
             paused = false;
-            pause_check();
-            display_map(false);
+            pauseCheck();
         } else {
+            display_menu(true);
             paused = true;
-            display_map(true);
         }
     }
 
-    if (e.keyCode === 13 && paused && progress === 3) {
+    if (e.keyCode === 77 && progress >= 3) {//m
+        if (map_state == true) {
+            display_map(false);
+            paused = false;
+            pauseCheck();
+        } else {
+            display_map(true);
+            paused = true;
+        }
+    }
+
+    if (e.keyCode === 13 && map_state == true) {//enter
         teleport();
+        if (progress == 3) {
+            story(4);
+        }
     }
 });
 
