@@ -183,3 +183,13 @@ button:hover {
     animation-duration: 0.5s;
     animation-name: pop_in_text;
 }
+
+@keyframes open_inv {
+    from {right: 100%}
+    to {right: 10%}
+}
+
+.open_inv {
+    animation-duration: 0.5s;
+    animation-name: open_inv;
+}

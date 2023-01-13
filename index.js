@@ -300,7 +300,7 @@ function story(event) {
     break;
 
     case 1:
-        document.getElementById("text_box2").innerHTML = "SHOOT:<br>[SPACE]";
+        document.getElementById("text_box2").innerHTML = "SHOOT:<br>[SPACE]<br>DIRECTION:<br>[ARROWS]";
         timer(2000, 3);
         timer(1500, 4, true);
     break;
@@ -308,9 +308,9 @@ function story(event) {
     case 2:
         document.getElementById("text_box2").style.display = "none";
         timer(1000, 5);
-        timer(13000, 6, null, 1500);
+        timer(9000, 6, null, 1500);
         timer(1500, 7, null, 3000);
-        setTimeout(function(){story(3);}, 15500);
+        setTimeout(function(){story(3);}, 11500);
         timer(4000, 8, true, null);
         break;
 
@@ -323,7 +323,7 @@ function story(event) {
     case 4:
         progress = 4;
         timer(1000, 9);
-        document.getElementById("text_box2").innerHTML = "MENU:<br>[TAB]";
+        document.getElementById("text_box2").innerHTML = "MENU:<br>[I]";
     break;
     }
 }

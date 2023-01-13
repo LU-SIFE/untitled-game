@@ -51,10 +51,16 @@ document.addEventListener("keydown", function(e) {
     if (e.keyCode === 73) {//i
         if (menu_state == true) {
             display_menu(false);
+            display_map(false);
+            map_state = false;
+            menu_state = false;
             paused = false;
             pauseCheck();
         } else {
             display_menu(true);
+            display_map(false);
+            map_state = false;
+            menu_state = true;
             paused = true;
         }
     }
@@ -62,10 +68,16 @@ document.addEventListener("keydown", function(e) {
     if (e.keyCode === 77 && progress >= 3) {//m
         if (map_state == true) {
             display_map(false);
+            display_menu(false);
+            map_state = false;
+            menu_state = false;
             paused = false;
             pauseCheck();
         } else {
             display_map(true);
+            display_menu(false);
+            menu_state = false;
+            map_state = true;
             paused = true;
         }
     }

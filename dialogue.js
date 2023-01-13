@@ -8,5 +8,5 @@ var text_array = [
     "Looks like that<br>did it. Let's find<br>a way out of here.",
     "... It's so empty.",
     "Maybe I should stay<br>where I woke up, so I<br>don't lose my way.",
-    "Maybe I should check<br>what I have on me...<br> inventory is important!"
+    "Maybe I should check<br>what I have on me...<br>Inventory is important!"
 ];

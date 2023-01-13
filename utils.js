@@ -81,13 +81,12 @@ function component(width, height, color, x, y, player) {
 
 function display_menu(state) {
     if (state == true) {
-        menu_state = true;
-        map_state = false;
+        document.getElementById("menu").classList.add("open_inv");
+        setTimeout(function() {
+        document.getElementById("menu").classList.remove("open_inv");}, 500);
         document.getElementById("menu").style.display = "flex";
         document.getElementById("menu").style.zIndex = "10";
     } else {
-        menu_state = false;
-        map_state = false;
         document.getElementById("menu").style.display = "none";
         document.getElementById("menu").style.zIndex = "5";
     }
@@ -96,13 +95,9 @@ function display_menu(state) {
 
 function display_map(state) {
     if (state == true) {
-        map_state = true;
-        menu_state = false;
         document.getElementById("map").style.display = "flex";
         document.getElementById("map").style.zIndex = "10";
     } else {
-        map_state = false;
-        menu_state = false;
         document.getElementById("map").style.display = "none";
         document.getElementById("menu").style.zIndex = "5";
     }
@@ -179,4 +174,14 @@ function gunCheck() {
         myGun.x = myGamePiece.x + 4;
         myGun.y = myGamePiece.y + 38; 
     }
+}
+
+//window resizing
+window.addEventListener('resize', onWindowResize, false);
+function onWindowResize() {
+  myGameArea.canvas.width = getWidth();
+  myGameArea.canvas.height = getHeight();
+  myGameArea.context.resetTransform();
+  myGameArea.context.translate(-myGamePiece.x - 16,-myGamePiece.y - 16);
+  myGameArea.context.translate(myGameArea.canvas.width / 2, myGameArea.canvas.height / 2);
 }
