@@ -81,25 +81,33 @@ function component(width, height, color, x, y, player) {
 
 function display_menu(state) {
     if (state == true) {
+        document.getElementById("menu").classList.remove("close_inv");
         document.getElementById("menu").classList.add("open_inv");
-        setTimeout(function() {
-        document.getElementById("menu").classList.remove("open_inv");}, 500);
         document.getElementById("menu").style.display = "flex";
         document.getElementById("menu").style.zIndex = "10";
     } else {
-        document.getElementById("menu").style.display = "none";
+        document.getElementById("menu").classList.remove("open_inv");
+        document.getElementById("menu").classList.add("close_inv");
+        setTimeout(function() {
+            document.getElementById("menu").style.display = "none";
+        }, 500);
         document.getElementById("menu").style.zIndex = "5";
     }
-
 }
 
 function display_map(state) {
     if (state == true) {
+        document.getElementById("map").classList.remove("close_map");
+        document.getElementById("map").classList.add("open_map");
         document.getElementById("map").style.display = "flex";
         document.getElementById("map").style.zIndex = "10";
     } else {
-        document.getElementById("map").style.display = "none";
-        document.getElementById("menu").style.zIndex = "5";
+        document.getElementById("map").classList.remove("open_map");
+        document.getElementById("map").classList.add("close_map");
+        setTimeout(function() {
+            document.getElementById("map").style.display = "none";
+        }, 500);
+        document.getElementById("map").style.zIndex = "5";
     }
 }
 

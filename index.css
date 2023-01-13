@@ -187,10 +187,53 @@ button:hover {
 @keyframes open_inv {
     0% {right: 100%; bottom: 100%;}
     50% {right: 100%; bottom: 5%;}
-    100% {right: 10%;}
+    100% {right: 10%; bottom: 5%;}
+}
+
+@keyframes close_inv {
+    0% {right: 10%; bottom: 5%;}
+    50% {right: 100%; bottom: 5%;}
+    100% {bottom: 100%; right: 100%;}
 }
 
 .open_inv {
     animation-duration: 0.5s;
     animation-name: open_inv;
+    animation-fill-mode: forwards;
+}
+
+.close_inv {
+    animation-duration: 0.5s;
+    animation-name: close_inv;
+    animation-fill-mode: forwards;
+}
+
+/* */
+    top: 2%;
+    left: 1.5%;
+    width: 20%;
+    height: 40%;
+
+@keyframes open_map {
+    0% {width: 0%; height: 0%;}
+    50% {width: 0%; height: 40%;}
+    100% {width: 20%; height: 40%;}
+}
+
+@keyframes close_map {
+    0% {width: 20%; height: 40%;}
+    50% {width: 0%; height: 40%;}
+    100% {width: 0%; height: 0%;}
+}
+
+.open_map {
+    animation-duration: 0.5s;
+    animation-name: open_map;
+    animation-fill-mode: forwards;
+}
+
+.close_map {
+    animation-duration: 0.5s;
+    animation-name: close_map;
+    animation-fill-mode: forwards;
 }

@@ -55,7 +55,7 @@ document.addEventListener("keydown", function(e) {
             map_state = false;
             menu_state = false;
             paused = false;
-            pauseCheck();
+            setTimeout(function() {pauseCheck();}, 500);
         } else {
             display_menu(true);
             display_map(false);
@@ -72,7 +72,7 @@ document.addEventListener("keydown", function(e) {
             map_state = false;
             menu_state = false;
             paused = false;
-            pauseCheck();
+            setTimeout(function() {pauseCheck();}, 500);
         } else {
             display_map(true);
             display_menu(false);
